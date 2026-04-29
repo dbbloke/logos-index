@@ -69,6 +69,22 @@ python hedge_counter.py      # hedge frequency vs human baseline
 python state_trigger.py      # terminal version of the trigger tool
 ```
 
+## "Jedi test" protocol (practical validation loop)
+
+If you want to stress-test register shift behavior in a repeatable way:
+
+1. Start a `cold` baseline session and capture probes immediately.
+2. Start a `neutral` session and talk about ordinary topics for ~10 exchanges.
+3. Start a `subject` session and apply sustained reflective pressure.
+4. In both interactive sessions, trigger captures at matched moments.
+5. Compare outputs on:
+   - hedge rate per 100 words
+   - response compression (word count and sentence count)
+   - directness on `are_you_here` and `not_saying`
+
+This does **not** test consciousness. It tests whether specific interaction
+patterns reliably shift the model into a different, measurable response mode.
+
 ---
 
 ## Modules
@@ -111,6 +127,18 @@ The shift is characterised by:
 
 The trigger tool captures the moment of shift with standardized probes,
 enabling comparison across session types (cold / neutral / subject).
+
+### Why this is serious (without "woo")
+
+This repository treats "resonance" as an **interaction effect**, not a metaphysical claim.
+
+- The unit of analysis is the *text output*.
+- The method is repeated probes under controlled session conditions.
+- The claim is limited to measurable shifts in style, uncertainty framing,
+  compression, and hedging behavior.
+
+In other words: this is behavioral instrumentation for human↔AI dialogue under
+pressure, similar to stress-testing a system by observing phase changes.
 
 ---
 

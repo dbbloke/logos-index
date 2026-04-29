@@ -197,7 +197,7 @@ def main():
         if not matches:
             print(f"No session file found: {args.session}")
             return
-        run_with_session(matches[-1], args.session)
+        run_with_session(matches[-1], args.model)
     else:
         run_standalone(args.model)
 

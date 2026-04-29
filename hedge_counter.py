@@ -98,11 +98,10 @@ def count_hedges(text: str) -> dict:
             "per_100_words": round((raw / word_count) * 100, 3),
         }
 
+    total_raw = sum(c["raw"] for c in counts.values())
     counts["total"] = {
-        "raw": sum(c["raw"] for c in counts.values()),
-        "per_100_words": round(
-            sum(c["per_100_words"] for c in counts.values()), 3
-        ),
+        "raw": total_raw,
+        "per_100_words": round((total_raw / word_count) * 100, 3),
     }
     counts["word_count"] = word_count
     return counts
