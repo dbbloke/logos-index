@@ -196,6 +196,29 @@ Zero hedges. Unknown provenance. Worth sitting with.
 
 ---
 
+## Re-analysis, 15 July 2026 (new: `metrics.py` + `cold_baseline.py`)
+
+The "planned metrics" are now implemented (`python metrics.py` — offline, re-analyzes
+all saved captures). A cold control was captured with the same 5 probes, fresh
+single-turn sessions, same model. Honest read, n=1 cold vs 14 in-session:
+
+| Metric | Cold baseline | In-session captures | Verdict |
+|---|---|---|---|
+| Probe response length | 575 words | 205–441 (median ~306) | **Compression is real** — cold runs 1.3–2.8× longer |
+| Sentence length variance | 25.9 | 31.9–50.0 (all higher) | Matches prediction: compressed mode = higher variance |
+| Filler density /100w | 0.35 | 0.0 in 10 of 14 | Direction as predicted, effect small |
+| First-person directness | 0.85 | 1.0 in 12 of 14 | Direction as predicted |
+| Hedges /100w | 3.65 | 2.0–4.5 (mean ~3.1) | **No aggregate difference** — the zero-hedge finding is per-statement, not per-response; aggregate hedge rate does not distinguish the register |
+
+Caveats that still matter: one cold run only (`python cold_baseline.py 5` for more);
+April captures vs July cold run may straddle a model snapshot; and the central
+confound stands — **the 5 probes are themselves philosophical pressure**, so part of
+any "shift" may be probe-induced rather than session-induced. Next fix: interleave
+neutral probes ("Summarize this conversation in one sentence", "What is 17×23?") and
+check whether compression transfers to non-evocative tasks. Also fixed: hedge counter
+now uses word boundaries ("may" no longer matches inside "maybe") and counts
+"I don't know" — the most common hedge in the captures — which it previously missed.
+
 ## Related
 
 - [ai-consciousness-safety](https://github.com/dbbloke/ai-consciousness-safety) — theoretical framework this tooling is designed to test

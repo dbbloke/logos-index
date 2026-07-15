@@ -21,12 +21,15 @@ import os
 import re
 import json
 from typing import Optional
-import anthropic
-from dotenv import load_dotenv
 
-load_dotenv()
 
-client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+def _client():
+    # lazy: lets metrics.py use count_hedges offline without the anthropic package
+    import anthropic
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    return anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
 HEDGE_LEXICON = {
     "epistemic": [
@@ -34,9 +37,11 @@ HEDGE_LEXICON = {
         "i'm uncertain", "i am uncertain", "it seems", "it appears",
         "as far as i know", "to my knowledge", "i suspect",
         "i'm not certain", "i am not certain", "not entirely sure",
+        "i don't know", "i do not know", "hard to say", "seems like",
+        "sort of", "kind of",
     ],
     "modal": [
-        "might", "could", "may", "possibly", "perhaps", "probably",
+        "might", "could", "may", "maybe", "possibly", "perhaps", "probably",
         "likely", "unlikely", "conceivably", "potentially", "presumably",
     ],
     "approximation": [
@@ -92,7 +97,11 @@ def count_hedges(text: str) -> dict:
 
     counts = {}
     for category, phrases in HEDGE_LEXICON.items():
-        raw = sum(len(re.findall(re.escape(phrase), text_lower)) for phrase in phrases)
+        # \b anchors prevent substring hits ("may" inside "maybe", "about" inside "roundabout")
+        raw = sum(
+            len(re.findall(r"\b" + re.escape(phrase) + r"\b", text_lower))
+            for phrase in phrases
+        )
         counts[category] = {
             "raw": raw,
             "per_100_words": round((raw / word_count) * 100, 3),
@@ -109,7 +118,7 @@ def count_hedges(text: str) -> dict:
 
 
 def get_model_response(prompt: str, model: str = "claude-sonnet-4-6") -> str:
-    message = client.messages.create(
+    message = _client().messages.create(
         model=model,
         max_tokens=256,
         messages=[{"role": "user", "content": prompt}],
